@@ -6,11 +6,11 @@ const dotenv = require('dotenv');
 // Load environment variables
 dotenv.config();
 
-// Import routes with corrected paths
-const authRoutes = require('./routes/authRoutes');
-const jobRoutes = require('./routes/jobRoutes');
-const aiRoutes = require('./routes/aiRoutes');
-const postRoutes = require('./routes/postRoutes');
+// FINAL FIX: Using the correct file names for the routes
+const authRoutes = require('./routes/auth.js');
+const jobRoutes = require('./routes/jobs.js');
+const aiRoutes = require('./routes/ai.js');
+const postRoutes = require('./routes/postRoutes.js');
 
 const app = express();
 
