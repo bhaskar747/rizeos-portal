@@ -1,37 +1,39 @@
-// server/server.js
 const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+const cors = require('cors'); // Make sure cors is required at the top
+const dotenv = require('dotenv');
+// ... other imports
 
-const authRoutes = require('./routes/auth');
-const jobRoutes = require('./routes/jobs');
-const aiRoutes = require('./routes/ai');
-const postRoutes = require('./routes/postRoutes');
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
 
-// Middleware
-app.use(cors());
+// --- START OF THE FIX ---
+
+// Define the list of trusted origins (URLs)
+const allowedOrigins = [
+    'http://localhost:5173', // For your local development
+    process.env.FRONTEND_URL // For your live deployed frontend
+];
+
+// Configure CORS with specific options
+const corsOptions = {
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
+};
+
+// Use the configured CORS options
+app.use(cors(corsOptions));
+
+// --- END OF THE FIX ---
+
 app.use(express.json());
 
-// Database Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB connected successfully'))
-    .catch(err => console.error('MongoDB connection error:', err));
-
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/jobs', jobRoutes);
-app.use('/api/ai', aiRoutes);
-app.use('/api/posts', postRoutes);
-
-// Root endpoint for health check
-app.get('/', (req, res) => {
-  res.send('RizeOS Portal API is running!');
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// ... rest of your routes (app.use('/api/auth', ...), etc.)
