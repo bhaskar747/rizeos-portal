@@ -1,9 +1,11 @@
+// server.js
+
+// Load environment variables from .env
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 const authRoutes = require('./routes/auth.js');
 const jobRoutes = require('./routes/jobs.js');
@@ -12,44 +14,52 @@ const postRoutes = require('./routes/postRoutes.js');
 
 const app = express();
 
-// --- FINAL CORS CONFIGURATION ---
+// --- CORS CONFIGURATION ---
 const allowedOrigins = [
-    'http://localhost:5173',      // For your local development
-    process.env.FRONTEND_URL      // For your live deployed frontend
+  'http://localhost:5173',      // Local development
+  process.env.FRONTEND_URL      // Deployed frontend URL
 ];
 
 const corsOptions = {
-    origin: (origin, callback) => {
-        // Allow requests if their origin is in our trusted list
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            // Block requests from any other origin
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., mobile apps, curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET','POST','PUT','DELETE','OPTIONS']
 };
 
+// Apply CORS for all routes and methods, including preflight OPTIONS
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
+// Parse JSON bodies
 app.use(express.json());
 
-// --- DATABASE & ROUTES ---
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB connected successfully'))
-    .catch(err => console.error('MongoDB connection error:', err));
+// --- DATABASE CONNECTION ---
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
+// --- ROUTES ---
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/posts', postRoutes);
 
 app.get('/', (req, res) => {
-    res.send('RizeOS API is running...');
+  res.send('RizeOS API is running...');
 });
 
 // --- SERVER START ---
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
