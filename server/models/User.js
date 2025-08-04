@@ -8,7 +8,10 @@ const UserSchema = new mongoose.Schema({
     bio: { type: String, default: '' },
     linkedinUrl: { type: String, default: '' },
     skills: [{ type: String }],
-    walletAddress: { type: String, default: '', unique: true, sparse: true }
+    walletAddress: { type: String, 
+        default: null, // Use actual null, not the string 'null'
+        unique: true, 
+        sparse: true }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);
