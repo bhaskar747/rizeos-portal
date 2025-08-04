@@ -12,17 +12,21 @@ const postRoutes = require('./routes/postRoutes.js');
 
 const app = express();
 
-// --- TEMPORARY DEBUGGING CORS CONFIGURATION ---
-console.log(`TRUSTING FRONTEND_URL: ${process.env.FRONTEND_URL}`);
+// --- FINAL CORS CONFIGURATION ---
+const allowedOrigins = [
+    'http://localhost:5173',      // For your local development
+    process.env.FRONTEND_URL      // For your live deployed frontend
+];
 
 const corsOptions = {
     origin: (origin, callback) => {
-        // This is the most important line for debugging.
-        // It will print the exact origin of the request to your Render logs.
-        console.log(`>>>>> Request received from origin: ${origin}`);
-        
-        // For debugging, we will temporarily allow ALL origins.
-        callback(null, true); 
+        // Allow requests if their origin is in our trusted list
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            // Block requests from any other origin
+            callback(new Error('Not allowed by CORS'));
+        }
     },
     credentials: true
 };
@@ -41,9 +45,10 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/posts', postRoutes);
 
 app.get('/', (req, res) => {
-    res.send('RizeOS API is running in DEBUG MODE...');
+    res.send('RizeOS API is running...');
 });
 
+// --- SERVER START ---
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
