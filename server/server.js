@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 // Load environment variables
 dotenv.config();
 
-// Import routes
+// Import routes with corrected paths
 const authRoutes = require('./routes/authRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const aiRoutes = require('./routes/aiRoutes');
@@ -14,44 +14,31 @@ const postRoutes = require('./routes/postRoutes');
 
 const app = express();
 
-// --- START OF THE CORS CONFIGURATION ---
-
-// Define the list of trusted origins (URLs)
+// --- CORS CONFIGURATION ---
 const allowedOrigins = [
-    'http://localhost:5173',      // For local development
-    process.env.FRONTEND_URL      // For your live deployed frontend
+    'http://localhost:5173',
+    process.env.FRONTEND_URL
 ];
-
-// Configure CORS with specific options
 const corsOptions = {
     origin: (origin, callback) => {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
         }
-        return callback(null, true);
     }
 };
-
-// Use the configured CORS options
 app.use(cors(corsOptions));
 
-// --- END OF THE CORS CONFIGURATION ---
-
-// Middleware to parse JSON bodies
+// --- MIDDLEWARE ---
 app.use(express.json());
 
-// --- START OF RESTORED DATABASE & ROUTES ---
-
-// Database Connection
+// --- DATABASE CONNECTION ---
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected successfully'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-// API Routes
+// --- API ROUTES ---
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/ai', aiRoutes);
@@ -62,8 +49,7 @@ app.get('/', (req, res) => {
     res.send('RizeOS API is running...');
 });
 
-// --- END OF RESTORED DATABASE & ROUTES ---
-
+// --- SERVER START ---
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
