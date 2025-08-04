@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  /* A deep, professional dark background */
+  background-color: #111827; /* Tailwind's gray-900 */
+  color: #d1d5db; /* Tailwind's gray-300 */
+  font-family: 'Inter', sans-serif;
+}
