@@ -1,6 +1,14 @@
+// server/models/Job.js
+
 const mongoose = require('mongoose');
 
 const jobSchema = new mongoose.Schema({
+    // --- FIX IS HERE: Standardize on the name 'author' ---
+    author: { // Renamed from 'postedBy' for clarity and convention
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     title: {
         type: String,
         required: true,
@@ -18,21 +26,15 @@ const jobSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    // This is the new field for job location
     location: {
         type: String,
         required: true,
         default: 'Remote'
     },
-    postedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-    },
     paymentTx: {
         type: String,
         required: true,
-        unique: true, // Ensures one transaction cannot be used for multiple jobs
+        unique: true, // This is excellent for preventing duplicate payments
     },
 }, { timestamps: true });
 
