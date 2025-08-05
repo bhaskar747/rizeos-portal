@@ -5,7 +5,7 @@ RizeOS Portal is a full-stack, decentralized job board that connects talented pr
 **Live Application:** [https://rizeos-portal.vercel.app/](https://rizeos-portal.vercel.app/)
 
  
-*(Optional: Replace with a URL to a screenshot of your app)*
+
 
 ---
 
