@@ -1,4 +1,4 @@
-// server/controllers/aiController.js
+
 const aiService = require('../services/aiService');
 const User = require('../models/User');
 

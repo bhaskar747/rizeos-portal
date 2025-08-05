@@ -1,4 +1,4 @@
-// server/services/solanaService.js
+
 const { Connection, clusterApiUrl } = require('@solana/web3.js');
 
 exports.confirmTransaction = async (signature) => {

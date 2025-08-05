@@ -8,7 +8,7 @@ import '@solana/wallet-adapter-react-ui/styles.css';
 
 const AppWalletProvider = ({ children }) => {
     // This is the only change needed.
-    const network = WalletAdapterNetwork.Testnet; // Changed from Devnet to Testnet
+    const network = WalletAdapterNetwork.Testnet; 
 
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
     const wallets = useMemo(() => [new PhantomWalletAdapter()], []);

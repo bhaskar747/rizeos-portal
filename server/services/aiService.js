@@ -1,8 +1,8 @@
-// server/services/aiService.js
+
 const natural = require('natural');
 const tokenizer = new natural.WordTokenizer();
 
-// FINAL FIX: Greatly expanded keyword list for more accurate extraction
+
 const SKILL_KEYWORDS = [
     // Languages
     'javascript', 'typescript', 'python', 'java', 'c#', 'c++', 'php', 'ruby', 'go', 'rust', 'swift', 'kotlin', 'sql', 'html', 'css',

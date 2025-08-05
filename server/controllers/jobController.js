@@ -1,12 +1,11 @@
-// server/controllers/jobController.js
+
 
 const Job = require('../models/Job');
-// Assuming you have this service, if not, you'll need to implement it or remove the check.
-// const { confirmTransaction } = require('../services/solanaService'); 
 
-// Create a new job, now including location
+
+
 exports.createJob = async (req, res) => {
-    // --- Add this line for debugging ---
+    
     console.log("Backend received /jobs/create request with body:", req.body);
     console.log("Authenticated user ID from middleware:", req.user.id);
 
@@ -21,7 +20,7 @@ exports.createJob = async (req, res) => {
     }
     */
     
-    // --- FIX IS HERE: Use the correct field names from your Job.js schema ---
+    
     const job = new Job({
         title,
         description,
@@ -41,14 +40,14 @@ exports.createJob = async (req, res) => {
     } catch (error) {
         // Provide more specific error feedback
         console.error("Error saving job to database:", error);
-        if (error.code === 11000) { // This is a duplicate key error
+        if (error.code === 11000) { 
             return res.status(400).json({ message: 'This payment transaction has already been used for another job posting.' });
         }
         res.status(500).json({ message: 'Server error while creating job post.', error: error.message });
     }
 };
 
-// Get jobs, now with filtering capabilities
+
 exports.getJobs = async (req, res) => {
     try {
         const { location, q } = req.query; 
@@ -67,7 +66,7 @@ exports.getJobs = async (req, res) => {
         }
 
         const jobs = await Job.find(filter)
-            // --- FIX IS HERE: Populate 'author' to match the schema ---
+            
             .populate('author', 'name') // Use 'author', not 'postedBy'
             .sort({ createdAt: -1 });
             

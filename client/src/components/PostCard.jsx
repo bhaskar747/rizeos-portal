@@ -1,33 +1,31 @@
-// src/components/PostCard.jsx
+
 
 import React from 'react';
 import { ThumbsUp } from 'lucide-react';
 import api from '@/api/index.js';
 
 const PostCard = ({ post, onLike }) => {
-    // --- Defensive Guard Clause ---
-    // If the post is missing or the author field is missing, we stop here.
-    // This is the most important fix to prevent the app from crashing.
+   
     if (!post || !post.author) {
-        return null; // Return null to simply skip rendering this broken card.
+        return null; 
     }
 
     const handleLike = async () => {
         try {
-            // We can safely use post._id here because the guard clause passed.
+            
             const { data } = await api.put(`/posts/${post._id}/like`);
-            onLike(data); // Update the post in the main dashboard state
+            onLike(data); 
         } catch (error) {
             console.error('Failed to like post:', error);
         }
     };
 
-    // A simple way to format dates
+    
     const postDate = new Date(post.createdAt).toLocaleDateString('en-US', {
         month: 'short', day: 'numeric'
     });
 
-    // Safely get the author's name and initial, with fallbacks.
+    
     const authorName = post.author?.name || 'Anonymous';
     const authorInitial = authorName.charAt(0);
 

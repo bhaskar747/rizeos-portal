@@ -7,7 +7,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Profile from '@/pages/Profile';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import Footer from '@/components/Footer'; // Import the new Footer component
+import Footer from '@/components/Footer'; 
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         </Routes>
       </main>
-      <Footer /> {/* Add the Footer component at the end */}
+      <Footer /> {/*  Footer component at the end */}
     </div>
   );
 }

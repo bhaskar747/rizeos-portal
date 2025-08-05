@@ -1,4 +1,4 @@
-// server/controllers/authController.js
+
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -28,14 +28,12 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-// server/controllers/authController.js
 
-// ... (keep the other functions like registerUser, getUserProfile, etc.)
 
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
-        // Find user by email
+        
         const user = await User.findOne({ email });
 
         // If no user is found, return an error immediately
@@ -64,7 +62,7 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-// ... (keep the other functions)
+
 
 exports.getUserProfile = async (req, res) => {
     try {

@@ -9,8 +9,8 @@ const CreatePost = ({ onPostCreated }) => {
         if (!content.trim()) return;
         try {
             const { data } = await api.post('/posts', { content });
-            onPostCreated(data); // Pass the new post up to the dashboard
-            setContent(''); // Clear the textarea
+            onPostCreated(data); 
+            setContent(''); 
         } catch (error) {
             console.error('Failed to create post:', error);
         }
