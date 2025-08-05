@@ -1,8 +1,6 @@
 // server.js
 
-// Load environment variables from .env
 require('dotenv').config();
-
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -16,13 +14,12 @@ const app = express();
 
 // --- CORS CONFIGURATION ---
 const allowedOrigins = [
-  'http://localhost:5173',      // Local development
-  process.env.FRONTEND_URL      // Deployed frontend URL
+  'http://localhost:5173',     // Local development
+  process.env.FRONTEND_URL     // Deployed frontend URL (no trailing slash)
 ];
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (e.g., mobile apps, curl)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -30,11 +27,13 @@ const corsOptions = {
     }
   },
   credentials: true,
-  methods: ['GET','POST','PUT','DELETE','OPTIONS']
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
 };
 
-// Apply CORS for all routes and methods, including preflight OPTIONS
+// 1. Apply CORS for every request, before any routes
 app.use(cors(corsOptions));
+// 2. Explicitly handle all OPTIONS preflight requests
 app.options('*', cors(corsOptions));
 
 // Parse JSON bodies
@@ -48,7 +47,7 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('MongoDB connected successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// --- ROUTES ---
+// --- ROUTES --- (use correct /api/auth prefix)
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/ai', aiRoutes);
